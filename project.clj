@@ -10,7 +10,8 @@
                  [camel-snake-kebab "0.4.2"]
                  [clj-http "3.12.2"]
                  [metosin/reitit "0.5.13"]
-                 [ring-cors "0.1.13"]]
+                 [ring-cors "0.1.13"]
+                 [integrant/repl "0.3.2"]]
   :main ^:skip-aot s71-challenge.server
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all

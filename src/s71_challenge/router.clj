@@ -11,7 +11,6 @@
             [reitit.ring.spec :as rs]
             [reitit.ring.middleware.dev :as dev]
             [muuntaja.core :as m]
-            [ring.middleware.cors :refer [wrap-cors]]
             [s71-challenge.queue.routes :as routes]))
 
 (def swagger-docs
@@ -32,13 +31,9 @@
           :muuntaja m/instance
           :middleware [swagger/swagger-feature
                        middleware.muuntaja/format-middleware
-                       (fn [handler]
-                         (wrap-cors handler
-                                    :access-control-allow-origin ["*"]
-                                    :access-control-allow-methods [:get :post :put :delete :patch]))
                        ;exception/exception/middleware
-                       coercion/coerce-response-middleware
-                       coercion/coerce-request-middleware]}})
+                       coercion/coerce-request-middleware
+                       coercion/coerce-response-middleware]}})
 
 (defn routes
   [env]
