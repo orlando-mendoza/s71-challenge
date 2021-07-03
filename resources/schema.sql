@@ -1,0 +1,11 @@
+-- Drop Tables
+DROP TABLE IF EXISTS queue;
+
+-- Create Table
+CREATE TABLE queue (
+  id SERIAL NOT NULL PRIMARY KEY,
+  message TEXT NOT NULL,
+  message_type TEXT NOT NULL,
+  hidden BOOLEAN NOT NULL DEFAULT false,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

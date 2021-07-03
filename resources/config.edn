@@ -1,0 +1,4 @@
+{:server/jetty {:handler #ig/ref :s71-challenge/app
+                :port 5000}
+ :s71-challenge/app     {:jdbc-url #ig/ref :db/mysql}
+ :db/mysql  {}}
