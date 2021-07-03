@@ -1,4 +1,6 @@
-(ns s71-challenge.mysql-queue)
+(ns s71-challenge.handler
+  (:require [s71-challenge.queue.db :as db]
+            [ring.util.response :as rr]))
 
 ; The challenge objective is to create a FiFo multi-queue with messages stored in a MySQL database,
 ; with an implementation that is independent of test data or use case.
@@ -13,13 +15,15 @@
 ;
 ; Your completed files can be submitted as a zip file, GitHub repo, or GitHub gist.
 
-(defn push
+(defn push-messages
   "Pushes the given messages to the queue.
    Returns a list of booleans indicating whether or not each message
    was successfully added to the queue."
-  [messages]
-  ;; TODO implement this function
-  )
+  [db]
+  (fn [request]
+    (let [messages (-> request :parameters :body)]
+      (db/push-messages db messages)
+      (rr/status 200))))
 
 (defn peek
   "Returns one or more messages from the queue.

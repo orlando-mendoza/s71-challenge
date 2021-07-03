@@ -3,19 +3,12 @@
     [ring.adapter.jetty :as jetty]
     [integrant.core :as ig]
     [environ.core :refer [env]]
-    [reitit.ring :as ring]))
-
-;(defn app
-;  [env]
-;  (router/routes env))
+    [s71-challenge.router :as router]
+    [next.jdbc :as jdbc]))
 
 (defn app
-  [env]
-  (ring/ring-handler
-    (ring/router
-      [["/"
-        {:get {:handler (fn [req] {:status 200
-                                   :body   "S71 Challenge"})}}]])))
+ [env]
+ (router/routes env))
 
 (defmethod ig/prep-key :server/jetty
   [_ config]
@@ -23,7 +16,7 @@
 
 (defmethod ig/prep-key :db/mysql
   [_ config]
-  (merge config {:jdbc-url (env :jdbc-database)}))
+  (merge config {:jdbc-url (env :jdbc-database-url)}))
 
 (defmethod ig/init-key :server/jetty
   [_ {:keys [handler port]}]
@@ -36,9 +29,9 @@
   (app config))
 
 (defmethod ig/init-key :db/mysql
-  [_ config]
+  [_ {:keys [jdbc-url]}]
   (println "\n Configured db")
-  (:jdbc-url config))
+  (jdbc/with-options jdbc-url jdbc/snake-kebab-opts))
 
 (defmethod ig/halt-key! :server/jetty
   [_ jetty]

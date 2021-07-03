@@ -4,7 +4,16 @@ FIXME: description
 
 ## Installation
 
-Download from http://example.com/FIXME.
+From the root directory of your application, run the resources/schema.sql script to create the table on your database.
+
+```bash
+$ mysql --host=hostname --user=username --database=dbname
+```
+mysql prompt will ask for your password. Enter your password and run:
+
+```mysql
+mysql> \. resources/schema.sql
+```
 
 ## Usage
 
