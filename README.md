@@ -1,10 +1,10 @@
 # s71-challenge
 
-FIXME: description
+The challenge objective is to create a FiFo multi-queue with messages stored in a MySQL database, with an implementation that is independent of test data or use case.
 
 ## Installation
 
-From the root directory of your application, run the resources/schema.sql script to create the table on your database.
+From the root directory on your application, run the resources/schema.sql script to create the table in your database.
 
 ```bash
 $ mysql --host=hostname --user=username --database=dbname
@@ -14,19 +14,55 @@ mysql prompt will ask for your password. Enter your password and run:
 ```mysql
 mysql> \. resources/schema.sql
 ```
+*** 
+Make shure you have a config var `JDBC_DATABASE_URL` with your database server and credentials, following to this pattern:
+
+`jdbc:mysql://server-address:port/dbname?password=your-password&user=your-user`
+
+Example:
+
+`jdbc:mysql://127.0.0.0:3306/mydatabase?password=1234&user=johnnymarr`
 
 ## Usage
 
-FIXME: explanation
+To run the app 
 
-    $ java -jar s71-challenge-0.1.0-standalone.jar [args]
+    $ lein repl
 
-## Options
+From the repl type `(user/reset)` and press `enter`
 
-FIXME: listing of options this app accepts.
+Among other messages you shold see something like:
+ 
+```bash
+ Configured db
 
-## Examples
+ Started app
 
+ Server running on port 5000
+ 
+ :resumed
+```
+The application should be running on http://localhost:5000
+
+## Notes
+
+I chose to expose endpoints of the stubbed functions and deploy the app on heroku
+
+https://omendoza-s71challenge.herokuapp.com
+
+
+## Tests
+
+I'm testing the endpoints directly in a single file. To run the tests:
+
+* On spacemacs:
+Run project tests `(C-c C-t C-p)`
+
+* On IntelliJ Cursive, open the queue_tests.clj file and call actions:
+`Run Tests in Current NS in REPL`
+
+* On VS Code 
+from command bar: `>Calva:Run All Tests `
 ...
 
 ### Bugs
