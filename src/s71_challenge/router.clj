@@ -25,11 +25,12 @@
 
 (def router-config
   {:validate rs/validate
-   ;; reitit.middleware/transform dev/print-request-diffs
+   ;:reitit.middleware/transform dev/print-request-diffs
    :exception pretty/exception
    :data {:coercion coercion-spec/coercion
           :muuntaja m/instance
           :middleware [swagger/swagger-feature
+                       parameters/parameters-middleware
                        middleware.muuntaja/format-middleware
                        ;exception/exception/middleware
                        coercion/coerce-request-middleware

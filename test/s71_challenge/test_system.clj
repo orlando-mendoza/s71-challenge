@@ -11,4 +11,4 @@
    (let [app (-> state/system :s71-challenge/app)
          request (app (-> (mock/request method uri)
                           (cond-> (:body opts) (mock/json-body (:body opts)))))]
-     (update request :body (partial m/decode "application/json")))))
+     (update request :body (fn [data] (m/decode "application/json" data))))))
