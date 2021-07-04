@@ -34,17 +34,18 @@
       (rr/response result))))
 ;; TODO: Try catch errors on db call
 
-(defn peek
+(defn peek-messages
   "Returns one or more messages from the queue.
    Messages are still visible after this call is made.
    Optional keyword args:
      message-type - filters for messages of the given type
      limit - returns the given number of messages (default: 1)"
-  [& {:keys [message-type limit]}]
-  ;; TODO implement this function
-  )
+  [db]
+  (fn [request]
+    (let [{:keys [message-type limit]} (-> request :parameters :body)]
+      (db/peek-messages db message-type limit))))
 
-(defn pop
+(defn pop-message
   "Returns one or more messages from the queue.
    Messages are hidden for the duration (in sec) specified by the
    required ttl arg, after which they return to the front of the queue.
@@ -55,7 +56,7 @@
   ;; TODO implement this function
   )
 
-(defn confirm
+(defn confirm-message
   "Deletes the given messages from the queue.
    This function should be called to confirm the successful handling
    of messages returned by the pop function."
