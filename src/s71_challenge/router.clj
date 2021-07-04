@@ -32,7 +32,7 @@
           :middleware [swagger/swagger-feature
                        parameters/parameters-middleware
                        middleware.muuntaja/format-middleware
-                       ;exception/exception/middleware
+                       exception/exception-middleware
                        coercion/coerce-request-middleware
                        coercion/coerce-response-middleware]}})
 

@@ -14,12 +14,13 @@
                  [integrant/repl "0.3.2"]]
   :main ^:skip-aot s71-challenge.server
   :target-path "target/%s"
-  :profiles {:uberjar {:aot :all
-                       :jvm-opts ["-Dclojure.compiler.direct-linking=true"]}
-             :dev [:project/dev :profiles/dev]
+  :profiles {:uberjar      {:aot :all}
+             ;; :jvm-opts     ["-Dclojure.compiler.direct-linking=true"]
+             :dev          [:project/dev :profiles/dev]
              :profiles/dev {}
-             :project/dev {:source-paths   ["dev/src"]
-                           :dependencies [[integrant/repl "0.3.1"]
-                                          [ring/ring-mock "0.4.0"]]
-                           :plugins [[lein-environ "1.2.0"]]}}
+             :project/dev  {:source-paths ["dev/src"]
+                            :resource-paths ["dev/resources"]
+                            :dependencies [[integrant/repl "0.3.1"]
+                                           [ring/ring-mock "0.4.0"]]
+                            :plugins      [[lein-environ "1.2.0"]]}}
   :uberjar-name "mysql_queue.jar")

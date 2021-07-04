@@ -4,7 +4,8 @@
     [integrant.core :as ig]
     [environ.core :refer [env]]
     [s71-challenge.router :as router]
-    [next.jdbc :as jdbc]))
+    [next.jdbc :as jdbc])
+  (:gen-class))
 
 (defn app
  [env]
