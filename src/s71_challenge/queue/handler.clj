@@ -47,24 +47,37 @@
           result (db/peek-messages db message-type limit)]
       (rr/response result))))
 
-(defn pop-message
+(defn pop-messages
   "Returns one or more messages from the queue.
    Messages are hidden for the duration (in sec) specified by the
    required ttl arg, after which they return to the front of the queue.
    Optional keyword args:
      message-type - filters for messages of the given type
      limit - returns the given number of messages (default: 1)"
-  [ttl & {:keys [message-type limit]}]
-  ;; TODO implement this function
-  )
+  [db]
+  (fn [request]
+    (let [ttl (-> request :parameters :body :ttl)
+          {:keys [message-type limit]
+           :or {message-type "%" limit 1}} (-> request :parameters :query)
+          messages (db/pop-message db message-type limit)]
 
-(defn confirm-message
+      ;; waits for the duration ttl and then unhides the messages
+      ;; if the worker confirmed the message during Thread/sleep ttl time
+      ;; unhide will have no effect for that message, which will be deleted by then
+      (future
+        (Thread/sleep (* ttl 1000))
+        (db/return-messages-to-front db messages))
+      (rr/response messages))))
+
+(defn confirm-messages
   "Deletes the given messages from the queue.
    This function should be called to confirm the successful handling
    of messages returned by the pop function."
-  [messages]
-  ;; TODO implement this function
-  )
+  [db]
+  (fn [request]
+    (let [messages (-> request :parameters :body)]
+      (db/confirm-messages db messages)
+      (rr/status 204))))
 
 (defn queue-length
   "Returns a count of the number of messages on the queue.

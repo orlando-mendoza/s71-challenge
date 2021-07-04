@@ -17,13 +17,24 @@
       ["/peek"
        {:post {:handler (handler/peek-messages db)
                :parameters {:query {(ds/opt :message-type) string?
-                                   (ds/opt :limit) int?}}
+                                    (ds/opt :limit) int?}}
                :responses {200 {:body [{:id number?
                                         :message string?
                                         :message-type string?
                                         :hidden boolean?
                                         :created-at inst?}]}}
-               :summary "Returns one or more messages from the queue."}}]]]))
+               :summary "Returns one or more messages from the queue."}}]
+      ["/pop"
+       {:post {:handler (handler/pop-messages db)
+               :parameters {:body {:ttl number?}
+                            :query {(ds/opt :message-type) string?
+                                    (ds/opt :limit) int?}}
+               :summary "Returns one or more messages from the queue. Messages are hidden during ttl secs."}}]
+      ["/confirm"
+       {:post {:handler (handler/confirm-messages db)
+               :parameters {:body [{:id int?}]}
+               :responses {204 {:body nil?}}
+               :summary "Deletes the given messages from a queue by message id"}}]]]))
 
 
 
@@ -42,5 +53,13 @@
   (s71-challenge.test-system/test-endpoint :post  "/v1/peek?message-type=AB&limit=2")
 
   (s71-challenge.test-system/test-endpoint :post  "/v1/peek")
+
+  (s71-challenge.test-system/test-endpoint :post  "/v1/pop?limit=5"
+                                           {:body {:ttl 10}})
+
+  (s71-challenge.test-system/test-endpoint :post  "/v1/confirm"
+                                           {:body [{:id 10}
+                                                   {:id 31}
+                                                   {:id 32}]})
   ;;
   )
