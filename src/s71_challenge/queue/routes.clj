@@ -51,17 +51,35 @@
                                                     :message-type "ABC"}
                                                    {:message      "message 1621"
                                                     :message-type "ABC"}]})
-
-  (s71-challenge.test-system/test-endpoint :post "/v1/peek"
-                                           {:body {:message-type "AB"
-                                                   :limit        11}})
+;; => {:status 200,
+;;     :headers {"Content-Type" "application/json; charset=utf-8"},
+;;     :body [{:success true, :generated-key 33} {:success true, :generated-key 34}]}
 
   (s71-challenge.test-system/test-endpoint :get  "/v1/peek?message-type=AB&limit=2")
 
-  (s71-challenge.test-system/test-endpoint :post  "/v1/peek")
+  (s71-challenge.test-system/test-endpoint :get  "/v1/peek")
+  ;; => {:status 200,
+;;     :headers {"Content-Type" "application/json; charset=utf-8"},
+;;     :body
+;;     [{:message-type "AB",
+;;       :hidden false,
+;;       :id 11,
+;;       :created-at "2021-07-04T02:10:25Z",
+;;       :message "message3"}]}
 
   (s71-challenge.test-system/test-endpoint :post  "/v1/pop?limit=5"
                                            {:body {:ttl 10}})
+
+  (s71-challenge.test-system/test-endpoint :post  "/v1/pop"
+                                           {:body {:ttl 10}})
+  ;; => {:status 200,
+;;     :headers {"Content-Type" "application/json; charset=utf-8"},
+;;     :body
+;;     [{:message-type "1",
+;;       :hidden false,
+;;       :id 12,
+;;       :created-at "2021-07-04T02:10:25Z",
+;;       :message "message5"}]}
 
   (s71-challenge.test-system/test-endpoint :post  "/v1/confirm"
                                            {:body [{:id 10}
