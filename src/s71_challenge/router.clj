@@ -6,6 +6,7 @@
             [reitit.coercion.spec :as coercion-spec]
             [reitit.ring.coercion :as coercion]
             [reitit.ring.middleware.exception :as exception]
+            [reitit.ring.middleware.parameters :as parameters]
             [reitit.dev.pretty :as pretty]
             [reitit.ring.spec :as rs]
             [reitit.ring.middleware.dev :as dev]
@@ -29,11 +30,11 @@
    :data {:coercion coercion-spec/coercion
           :muuntaja m/instance
           :middleware [swagger/swagger-feature
+                       parameters/parameters-middleware
                        middleware.muuntaja/format-middleware
                        ;exception/exception/middleware
-                       ;coercion/coerce-request-middleware
-                       ;coercion/coerce-response-middleware
-                       ]}})
+                       coercion/coerce-request-middleware
+                       coercion/coerce-response-middleware]}})
 
 (defn routes
   [env]

@@ -42,8 +42,10 @@
      limit - returns the given number of messages (default: 1)"
   [db]
   (fn [request]
-    (let [{:keys [message-type limit]} (-> request :parameters :body)]
-      (db/peek-messages db message-type limit))))
+    (let [{:keys [message-type limit]
+           :or {message-type "%" limit 1}} (-> request :parameters :query)
+          result (db/peek-messages db message-type limit)]
+      (rr/response result))))
 
 (defn pop-message
   "Returns one or more messages from the queue.

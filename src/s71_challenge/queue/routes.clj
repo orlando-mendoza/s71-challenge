@@ -11,20 +11,18 @@
        {:post {:handler (handler/push-messages db)
                :parameters {:body [{:message string?
                                     :message-type string?}]}
-               ;:responses {200 {:body [{
-               ;                         :generated-key int?
-               ;                         :success boolean?
-               ;                         }]}}
+               :responses {200 {:body [{:generated-key number?
+                                        :success boolean?}]}}
                :summary "Pushes the given messages to a queue"}}]
       ["/peek"
        {:post {:handler (handler/peek-messages db)
-               :parameters {:body {:message-type string?
-                                   :limit int?}}
-               ;:responses {200 {:body [{:id int?
-               ;                         :message string?
-               ;                         :message-type string?
-               ;                         :hidden boolean?
-               ;                         :created-at inst?}]}}
+               :parameters {:query {(ds/opt :message-type) string?
+                                   (ds/opt :limit) int?}}
+               :responses {200 {:body [{:id number?
+                                        :message string?
+                                        :message-type string?
+                                        :hidden boolean?
+                                        :created-at inst?}]}}
                :summary "Returns one or more messages from the queue."}}]]]))
 
 
@@ -32,13 +30,17 @@
 
 (comment
   (s71-challenge.test-system/test-endpoint :post "/v1/push"
-                                           {:body [{:message      "message 11"
-                                                    :message-type "AB"}
-                                                   {:message      "message 16"
-                                                    :message-type "B"}]})
+                                           {:body [{:message      "message 1121"
+                                                    :message-type "ABC"}
+                                                   {:message      "message 1621"
+                                                    :message-type "ABC"}]})
 
   (s71-challenge.test-system/test-endpoint :post "/v1/peek"
                                            {:body {:message-type "AB"
-                                                   :limit        5}})
+                                                   :limit        11}})
+
+  (s71-challenge.test-system/test-endpoint :post  "/v1/peek?message-type=AB&limit=2")
+
+  (s71-challenge.test-system/test-endpoint :post  "/v1/peek")
   ;;
   )
