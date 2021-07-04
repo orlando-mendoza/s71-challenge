@@ -61,12 +61,14 @@
 
 (defn queue-length
   [db message-type with-hidden?]
-  (let [hidden (if with-hidden? "%" false)]
+  (let [hidden (if with-hidden? "%" 0)]
     (with-open [conn (jdbc/get-connection db)]
-      (jdbc/execute! conn [(str "SELECT count(*)
+      (-> (jdbc/execute! conn [(str "SELECT count(*) as n
                           FROM queue
                           WHERE message_type LIKE '" message-type
-                                "' AND hidden LIKE " hidden)]))))
+                                    "' AND hidden LIKE '" hidden "'")])
+          first
+          :n))))
 
 
 
@@ -90,3 +92,4 @@
 
   ;;
   )
+;; => nil

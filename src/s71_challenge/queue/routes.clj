@@ -15,7 +15,7 @@
                                         :success boolean?}]}}
                :summary "Pushes the given messages to a queue"}}]
       ["/peek"
-       {:post {:handler (handler/peek-messages db)
+       {:get {:handler (handler/peek-messages db)
                :parameters {:query {(ds/opt :message-type) string?
                                     (ds/opt :limit) int?}}
                :responses {200 {:body [{:id number?
@@ -34,7 +34,13 @@
        {:post {:handler (handler/confirm-messages db)
                :parameters {:body [{:id int?}]}
                :responses {204 {:body nil?}}
-               :summary "Deletes the given messages from a queue by message id"}}]]]))
+               :summary "Deletes the given messages from a queue by message id"}}]
+      ["/queue-length"
+       {:get {:handler (handler/queue-length db)
+              :parameters {:query {(ds/opt :message-type) string?
+                                   (ds/opt :with-hidden?) boolean?}}
+              :responses {200 {:body {:queue-length number?}}}
+              :summary "Returns a count of the number of messages on the queue."}}]]]))
 
 
 
@@ -50,7 +56,7 @@
                                            {:body {:message-type "AB"
                                                    :limit        11}})
 
-  (s71-challenge.test-system/test-endpoint :post  "/v1/peek?message-type=AB&limit=2")
+  (s71-challenge.test-system/test-endpoint :get  "/v1/peek?message-type=AB&limit=2")
 
   (s71-challenge.test-system/test-endpoint :post  "/v1/peek")
 
@@ -61,5 +67,10 @@
                                            {:body [{:id 10}
                                                    {:id 31}
                                                    {:id 32}]})
+
+  (s71-challenge.test-system/test-endpoint :get "/v1/queue-length?message-type=AB&with-hidden?=true")
+;; => {:status 200,
+;;     :headers {"Content-Type" "application/json; charset=utf-8"},
+;;     :body {:queue-length 15}}
   ;;
   )

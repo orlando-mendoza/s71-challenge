@@ -13,7 +13,7 @@
 ;
 ; If you need access to a MySQL database we can provide credentials upon request.
 ;
-                                        ; Your completed files can be submitted as a zip file, GitHub repo, or GitHub gist.
+; Your completed files can be submitted as a zip file, GitHub repo, or GitHub gist.
 
 (defn add-bool
   "Adds a boolean key for each truty genereted-key"
@@ -85,6 +85,9 @@
      message-type - filters for message of the given type
      with-hidden? - if truthy, includes messages that have been
                     popped but not confirmed"
-  [& {:keys [message-type with-hidden?]}]
-  ;; TODO implement this function
-  )
+  [db]
+  (fn [request]
+    (let [{:keys [message-type with-hidden?]
+           :or {message-type "%" with-hidden? false}} (-> request :parameters :query)
+          queue-count (db/queue-length db message-type with-hidden?)]
+      (rr/response {:queue-length queue-count}))))
